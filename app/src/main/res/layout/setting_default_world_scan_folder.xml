@@ -10,18 +10,18 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="World Scan Folders"
         android:textSize="28sp"
-        android:theme="@style/MinecraftFont" />
+        android:theme="@style/MinecraftFont"
+        tools:text="World Scan Folders" />
 
     <TextView
         android:id="@+id/description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Minecraft world scan folders"
         android:textColor="@color/description"
         android:textSize="18sp"
-        android:theme="@style/MinecraftFont" />
+        android:theme="@style/MinecraftFont"
+        tools:text="Minecraft world scan folders" />
 
     <ListView
         android:id="@+id/custom_folder"

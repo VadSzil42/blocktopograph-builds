@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.flexbox.FlexboxLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -23,7 +22,7 @@
             android:layout_height="match_parent"
             android:fontFamily="@font/minecraft_seven"
             android:gravity="center"
-            android:text="Play"
+            android:text="@string/play"
             android:textColor="@color/colorPrimary"
             app:drawableTint="@color/colorPrimary"
             app:drawableTopCompat="@drawable/baseline_play_arrow" />
@@ -42,7 +41,7 @@
             android:layout_height="match_parent"
             android:fontFamily="@font/minecraft_seven"
             android:gravity="center"
-            android:text="NBT Editor"
+            android:text="@string/nbt_editor"
             android:textColor="@color/colorPrimary"
             app:drawableTint="@color/colorPrimary"
             app:drawableTopCompat="@drawable/baseline_edit_document" />
@@ -61,7 +60,7 @@
             android:layout_height="match_parent"
             android:fontFamily="@font/minecraft_seven"
             android:gravity="center"
-            android:text="About"
+            android:text="@string/infomation"
             android:textColor="@color/colorPrimary"
             app:drawableTint="@color/colorPrimary"
             app:drawableTopCompat="@drawable/baseline_info_outline" />

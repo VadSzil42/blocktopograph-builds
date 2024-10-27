@@ -16,8 +16,8 @@ import com.badlogic.gdx.utils.LittleEndianInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -67,11 +67,8 @@ public class WorldPreLoader {
     public String getName() {
         File levelNameFile = new File(path, WORLD_LEVELNAME_FILE);
         if (!levelNameFile.exists()) return path.getName();
-        try {
-            var reader = new BufferedReader(new InputStreamReader(new FileInputStream(levelNameFile)));
-            var line = reader.readLine();
-            reader.close();
-            return line;
+        try (var reader = new BufferedReader(new FileReader(levelNameFile))) {
+            return reader.readLine();
         } catch (Exception e) {
             BOGGER.log(Level.SEVERE, "", e);
         }
@@ -80,16 +77,14 @@ public class WorldPreLoader {
 
     public Tag<?> getData() {
         if (tag == null) {
-            try {
-                FileInputStream is = new FileInputStream(data);
-                var reader = new LittleEndianInputStream(is);
+            try (var is = new FileInputStream(data);
+                 var reader = new LittleEndianInputStream(is)) {
                 reader.readByte(); // header version
                 is.skip(3);
                 reader.readInt();
 
                 NBTInputStream dataStream = new NBTInputStream(is, 0, ByteOrder.LITTLE_ENDIAN);
                 tag = dataStream.readTag();
-                is.close();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

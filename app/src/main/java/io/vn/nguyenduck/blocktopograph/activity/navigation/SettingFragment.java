@@ -28,11 +28,16 @@ public class SettingFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.setting_fragment, container, false);
-        ListView listView = v.findViewById(R.id.setting_list);
-        if (adapter == null) adapter = new SettingAdapter(listView);
-        listView.setAdapter(adapter);
+        ListView v = (ListView) inflater.inflate(R.layout.setting_fragment, container, false);
+        if (adapter == null) adapter = new SettingAdapter(v);
+        v.setAdapter(adapter);
         return v;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        adapter = null;
     }
 
     private static class SettingAdapter extends BaseAdapter {
@@ -61,11 +66,11 @@ public class SettingFragment extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            return ((getViewable) views.get(position)).getView();
+            return ((GetViewable) views.get(position)).getView();
         }
     }
 
-    public interface getViewable {
+    public interface GetViewable {
         View getView();
     }
 }

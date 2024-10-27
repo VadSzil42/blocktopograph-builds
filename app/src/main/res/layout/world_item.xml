@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
-    android:background="@color/activated_bg_color"
+    android:background="@color/activatedBgColor"
     android:orientation="vertical">
 
     <LinearLayout
@@ -47,7 +47,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="0dp"
-                    android:background="@color/activated_bg_color"
+                    android:background="@color/activatedBgColor"
                     android:fontFamily="@font/minecraft_seven"
                     android:paddingStart="5dp"
                     android:paddingTop="2dp"
@@ -98,11 +98,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
-<!--    <include-->
-<!--        android:id="@+id/toolbar_under_world_item"-->
-<!--        layout="@layout/toolbar_under_world_item"-->
-<!--        android:visibility="gone"-->
-<!--        tools:visibility="visible" />-->
 
 </LinearLayout>

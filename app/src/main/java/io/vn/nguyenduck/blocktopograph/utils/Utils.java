@@ -58,20 +58,19 @@ public class Utils {
         if (size <= 0) return "0 B";
         var units = List.of("B", "KB", "MB", "GB", "TB");
         var digitGroups = (int) (Math.log10(size) / Math.log10(1024.0));
-        return String.format(Locale.getDefault(), "%.2f %s", size / Math.pow(1024.0, digitGroups), units.get(digitGroups));
+        double normalizedSize = size / Math.pow(1024.0, digitGroups);
+        return String.format(Locale.getDefault(), "%.2f %s", normalizedSize, units.get(digitGroups));
     }
 
-    public static long transferStream(InputStream in, OutputStream out) {
+    private static final int BUFFER_SIZE = 8192;
+
+    public static long transferStream(InputStream in, OutputStream out) throws IOException {
         long transferred = 0;
-        byte[] buffer = new byte[8196];
+        byte[] buffer = new byte[BUFFER_SIZE];
         int read;
-        try {
-            while ((read = in.read(buffer, 0, 8196)) >= 0) {
-                out.write(buffer, 0, read);
-                transferred += read;
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        while ((read = in.read(buffer, 0, BUFFER_SIZE)) >= 0) {
+            out.write(buffer, 0, read);
+            transferred += read;
         }
         return transferred;
     }

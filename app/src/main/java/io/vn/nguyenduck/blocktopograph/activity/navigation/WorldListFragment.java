@@ -84,6 +84,12 @@ public class WorldListFragment extends Fragment {
     }
 
     private static class WorldListAdapter extends Adapter<ViewHolder> {
+
+        private static final int GAMEMODE_CREATIVE = R.string.gamemode_creative;
+        private static final int GAMEMODE_ADVENTURE = R.string.gamemode_adventure;
+        private static final int GAMEMODE_SPECTATOR = R.string.gamemode_spectator;
+        private static final int GAMEMODE_SURVIVAL = R.string.gamemode_survival;
+
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -112,10 +118,10 @@ public class WorldListFragment extends Fragment {
 
             TextView gamemode = view.findViewById(R.id.world_item_gamemode);
             Integer gamemodeResId = switch (data.getByteValue("ForceGameType").get()) {
-                case 1 -> R.string.gamemode_creative;
-                case 2 -> R.string.gamemode_adventure;
-                case 3 -> R.string.gamemode_spectator;
-                default -> R.string.gamemode_survival;
+                case 1 -> GAMEMODE_CREATIVE;
+                case 2 -> GAMEMODE_ADVENTURE;
+                case 3 -> GAMEMODE_SPECTATOR;
+                default -> GAMEMODE_SURVIVAL;
             };
             gamemode.setText(gamemodeResId);
 

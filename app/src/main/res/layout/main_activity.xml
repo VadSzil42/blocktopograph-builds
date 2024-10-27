@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:theme="@style/MinecraftFont"
-        app:backgroundTint="@color/border_bg_color"
+        app:backgroundTint="@color/borderBgColor"
         app:menu="@menu/bottom_navigation" />
 
 </RelativeLayout>

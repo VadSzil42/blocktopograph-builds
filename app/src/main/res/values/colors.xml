@@ -2,24 +2,12 @@
 <resources>
 	<color name="colorPrimary">#689f38</color>
 	<color name="colorPrimaryDark">#204003</color>
-	<color name="colorAccent">#1e88e5</color>
-	<color name="colorAccentDark">#1a76c7</color>
 
-	<color name="splashBackground">#212121</color>
-	<color name="splashTitle">#689f38</color>
-	<color name="splashSubTitle">#fff</color>
-
-	<color name="waterMark">#fff</color>
-	<color name="color_float_grey">#cdcdcd</color>
-	<color name="light_blue_600">#FF039BE5</color>
-	<color name="light_blue_900">#FF01579B</color>
-	<color name="light_blue_A200">#FF40C4FF</color>
-	<color name="light_blue_A400">#FF00B0FF</color>
-	<color name="black_overlay">#AA000000</color>
+	<color name="blackOverlay">#AA000000</color>
 
 	<color name="yellow">#ffe866</color>
 	<color name="colorBackgroundDark">#0C0E0C</color>
-	<color name="border_bg_color">#1e1e1f</color>
-	<color name="activated_bg_color">#454747</color>
-	<color name="description">#8B8C8C</color>
+	<color name="borderBgColor">#1e1e1f</color>
+	<color name="activatedBgColor">#454747</color>
+	<color name="description">#A6A7A7</color>
 </resources>

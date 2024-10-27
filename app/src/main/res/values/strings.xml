@@ -12,5 +12,9 @@
 	<string name="gamemode_creative">Creative</string>
 	<string name="gamemode_adventure">Adventure</string>
 	<string name="gamemode_spectator">Spectator</string>
+    <string name="settings">Settings</string>
+	<string name="play">Play</string>
+	<string name="nbt_editor">NBT Editor</string>
+	<string name="infomation">Infomation</string>
 
 </resources>

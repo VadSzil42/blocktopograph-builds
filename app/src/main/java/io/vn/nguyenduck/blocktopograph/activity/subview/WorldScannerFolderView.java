@@ -10,11 +10,13 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import io.vn.nguyenduck.blocktopograph.R;
 import io.vn.nguyenduck.blocktopograph.activity.navigation.SettingFragment;
+import io.vn.nguyenduck.blocktopograph.setting.SettingManager;
 
-public class WorldScannerFolderView implements SettingFragment.getViewable {
+public class WorldScannerFolderView implements SettingFragment.GetViewable {
 
     private final LinearLayout layout;
 
@@ -25,11 +27,12 @@ public class WorldScannerFolderView implements SettingFragment.getViewable {
     }
 
     private static class CustomFolderAdapter extends BaseAdapter {
-
-        private List<String> defaultPaths = List.of("/sdcard/games/com.mojang/minecraftWorlds");
-        private List<View> views = new ArrayList<>();
+        private final SettingManager manager = SettingManager.getInstance();
+        private final List<View> views = new ArrayList<>();
 
         public CustomFolderAdapter(ListView parent) {
+            @SuppressWarnings("unchecked")
+            List<String> defaultPaths = (List<String>) Objects.requireNonNull(manager.get("blocktopograph.world_scan_folders")).getDefaultValue();
             for (String path : defaultPaths) {
                 LayoutInflater inflater = LayoutInflater.from(parent.getContext());
                 LinearLayout layout = (LinearLayout) inflater.inflate(R.layout.path_item_in_world_scan_folder, parent, false);
@@ -45,7 +48,7 @@ public class WorldScannerFolderView implements SettingFragment.getViewable {
 
         @Override
         public Object getItem(int position) {
-            return null;
+            return Objects.requireNonNull(manager.get("blocktopograph.world_scan_folders")).value;
         }
 
         @Override
