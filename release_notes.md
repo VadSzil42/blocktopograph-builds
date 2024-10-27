@@ -18,3 +18,7 @@
 ### 21Oct24
 - Fixed alternative world not have icon make it crash
 - Added toolbar to world when clicked
+
+### 24Oct24
+- Removed shizuku needed for default folder access
+- Added setting tab with custom folder scan

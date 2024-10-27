@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:padding="10dp">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="World Scan Folders"
+        android:textSize="28sp"
+        android:theme="@style/MinecraftFont" />
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Minecraft world scan folders"
+        android:textColor="@color/description"
+        android:textSize="18sp"
+        android:theme="@style/MinecraftFont" />
+
+    <ListView
+        android:id="@+id/custom_folder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:descendantFocusability="afterDescendants"
+        android:windowSoftInputMode="adjustPan"
+        tools:listitem="@layout/path_item_in_world_scan_folder" />
+
+</LinearLayout>

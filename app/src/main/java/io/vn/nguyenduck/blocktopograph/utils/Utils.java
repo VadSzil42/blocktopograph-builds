@@ -6,6 +6,9 @@ import android.os.Build;
 import android.os.Environment;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -56,5 +59,20 @@ public class Utils {
         var units = List.of("B", "KB", "MB", "GB", "TB");
         var digitGroups = (int) (Math.log10(size) / Math.log10(1024.0));
         return String.format(Locale.getDefault(), "%.2f %s", size / Math.pow(1024.0, digitGroups), units.get(digitGroups));
+    }
+
+    public static long transferStream(InputStream in, OutputStream out) {
+        long transferred = 0;
+        byte[] buffer = new byte[8196];
+        int read;
+        try {
+            while ((read = in.read(buffer, 0, 8196)) >= 0) {
+                out.write(buffer, 0, read);
+                transferred += read;
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return transferred;
     }
 }

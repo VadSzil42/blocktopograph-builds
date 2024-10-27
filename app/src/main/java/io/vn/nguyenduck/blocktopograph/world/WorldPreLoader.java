@@ -30,7 +30,6 @@ public class WorldPreLoader {
     public final File path;
     public File icon;
     private File data;
-    private NBTInputStream dataStream;
     private Tag<?> tag;
 
     public WorldPreLoader(String path) {
@@ -70,7 +69,9 @@ public class WorldPreLoader {
         if (!levelNameFile.exists()) return path.getName();
         try {
             var reader = new BufferedReader(new InputStreamReader(new FileInputStream(levelNameFile)));
-            return reader.readLine();
+            var line = reader.readLine();
+            reader.close();
+            return line;
         } catch (Exception e) {
             BOGGER.log(Level.SEVERE, "", e);
         }
@@ -86,8 +87,9 @@ public class WorldPreLoader {
                 is.skip(3);
                 reader.readInt();
 
-                dataStream = new NBTInputStream(is, 0, ByteOrder.LITTLE_ENDIAN);
+                NBTInputStream dataStream = new NBTInputStream(is, 0, ByteOrder.LITTLE_ENDIAN);
                 tag = dataStream.readTag();
+                is.close();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

@@ -20,5 +20,6 @@
 	<color name="yellow">#ffe866</color>
 	<color name="colorBackgroundDark">#0C0E0C</color>
 	<color name="border_bg_color">#1e1e1f</color>
-	<color name="activated_bg_color">#313233</color>
+	<color name="activated_bg_color">#454747</color>
+	<color name="description">#8B8C8C</color>
 </resources>

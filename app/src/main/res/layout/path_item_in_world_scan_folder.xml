@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    tools:showIn="@layout/setting_default_world_scan_folder">
+
+    <EditText
+        android:id="@+id/path"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:autofillHints=""
+        android:background="@null"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:importantForAutofill="no"
+        android:inputType="textNoSuggestions"
+        android:maxLines="1"
+        android:textColor="@color/colorPrimary"
+        android:textSize="6pt"
+        android:theme="@style/MinecraftFont"
+        tools:text="/sdcard/games/com.mojang/minecraftWorlds" />
+
+    <ImageButton
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:background="@drawable/baseline_clear"
+        android:backgroundTint="@color/colorPrimary" />
+
+</LinearLayout>
