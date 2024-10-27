@@ -59,6 +59,7 @@ public class WorldListFragment extends Fragment {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onResume() {
         super.onResume();
         var worldPaths = SettingManager.getInstance().get("blocktopograph.world_scan_folders");
