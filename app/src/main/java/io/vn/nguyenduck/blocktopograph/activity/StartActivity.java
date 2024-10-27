@@ -183,22 +183,17 @@ public class StartActivity extends AppCompatActivity {
         File files = getExternalFilesDir(null);
         File setting = new File(files, "setting.json");
         if (!setting.exists()) {
-            try {
+            try (InputStream is = getResources().getAssets().open("setting.json");
+                 OutputStream os = new FileOutputStream(setting)) {
                 setting.createNewFile();
-                InputStream is = getResources().getAssets().open("setting.json");
-                OutputStream os = new FileOutputStream(setting);
                 transferStream(is, os);
-                is.close();
-                os.close();
             } catch (Exception e) {
                 BOGGER.log(Level.SEVERE, "Failed to create setting file", e);
             }
         }
 
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(setting));
+        try (BufferedReader reader = new BufferedReader(new FileReader(setting))) {
             String s = reader.lines().collect(Collectors.joining());
-            reader.close();
             JSONObject json = new JSONObject(s);
             var keys = getAllKeys(json);
             for (int i = 0; i < keys.size(); i++) {
