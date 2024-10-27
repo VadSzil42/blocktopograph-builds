@@ -91,6 +91,8 @@ public class WorldListFragment extends Fragment {
         private static final int GAMEMODE_SPECTATOR = R.string.gamemode_spectator;
         private static final int GAMEMODE_SURVIVAL = R.string.gamemode_survival;
 
+        private ViewHolder currentSelected = null;
+
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -103,6 +105,20 @@ public class WorldListFragment extends Fragment {
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             WorldPreLoader world = WORLDS.get(WORLD_PATH.get(position));
             View view = holder.itemView;
+
+            View floatingAction = view.findViewById(R.id.floating_action);
+
+            view.setOnClickListener(v -> {
+                if (currentSelected != null)
+                    currentSelected.itemView.findViewById(R.id.floating_action).setVisibility(View.GONE);
+                if (holder.equals(currentSelected)) {
+                    currentSelected = null;
+                    floatingAction.setVisibility(View.GONE);
+                } else {
+                    currentSelected = holder;
+                    floatingAction.setVisibility(View.VISIBLE);
+                }
+            });
 
             assert world != null;
             CompoundTag data = (CompoundTag) world.getData();

@@ -4,7 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
     tools:showIn="@layout/setting_default_world_scan_folder">
+
+    <!--    <TextView-->
+    <!--        android:id="@+id/path"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="match_parent"-->
+    <!--        android:layout_weight="1"-->
+    <!--        android:background="@null"-->
+    <!--        android:ellipsize="end"-->
+    <!--        android:gravity="center_vertical"-->
+    <!--        android:maxLines="1"-->
+    <!--        android:textColor="@color/colorPrimary"-->
+    <!--        android:textSize="6pt"-->
+    <!--        android:theme="@style/MinecraftFont"-->
+    <!--        tools:text="/sdcard/games/com.mojang/minecraftWorlds" />-->
 
     <EditText
         android:id="@+id/path"
@@ -27,6 +43,8 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:background="@drawable/baseline_clear"
-        android:backgroundTint="@color/colorPrimary" />
+        android:backgroundTint="@color/colorPrimary"
+        android:contentDescription="@string/confirm_delete_path"
+        android:visibility="gone" />
 
 </LinearLayout>

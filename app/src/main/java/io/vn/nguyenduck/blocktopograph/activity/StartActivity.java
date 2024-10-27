@@ -7,6 +7,7 @@ import static android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSIO
 import static io.vn.nguyenduck.blocktopograph.Constants.BOGGER;
 import static io.vn.nguyenduck.blocktopograph.utils.Utils.isAndroid11Up;
 import static io.vn.nguyenduck.blocktopograph.utils.Utils.transferStream;
+import static io.vn.nguyenduck.blocktopograph.utils.Utils.uppercaseFirstAndAfterUnderscore;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -214,12 +215,12 @@ public class StartActivity extends AppCompatActivity {
 
                     @Override
                     public String getCategory() {
-                        return "Blocktopograph";
+                        return uppercaseFirstAndAfterUnderscore(key.split("\\.")[0]);
                     }
 
                     @Override
                     public String getName() {
-                        return "World Scan Folders";
+                        return uppercaseFirstAndAfterUnderscore(key.split("\\.")[1]);
                     }
 
                     @Override

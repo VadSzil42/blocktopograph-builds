@@ -99,4 +99,10 @@
 
     </LinearLayout>
 
+    <include
+        android:id="@+id/floating_action"
+        layout="@layout/toolbar_under_world_item"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
 </LinearLayout>

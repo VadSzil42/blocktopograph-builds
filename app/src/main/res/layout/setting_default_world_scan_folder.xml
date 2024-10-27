@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textSize="28sp"
         android:theme="@style/MinecraftFont"
@@ -21,13 +21,38 @@
         android:textColor="@color/description"
         android:textSize="18sp"
         android:theme="@style/MinecraftFont"
-        tools:text="Minecraft world scan folders" />
+        tools:text="Description"
+        tools:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end">
+
+        <ImageButton
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="end"
+            android:background="@drawable/create_world"
+            android:backgroundTint="@color/colorPrimary"
+            android:contentDescription="@string/create_world_scan_folders" />
+
+        <ImageButton
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="end"
+            android:background="@drawable/baseline_horizontal_rule"
+            android:backgroundTint="@color/colorPrimary"
+            android:contentDescription="@string/delete_world_scan_folders" />
+
+    </LinearLayout>
 
     <ListView
         android:id="@+id/custom_folder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:descendantFocusability="afterDescendants"
+        android:scrollbars="none"
         android:windowSoftInputMode="adjustPan"
         tools:listitem="@layout/path_item_in_world_scan_folder" />
 

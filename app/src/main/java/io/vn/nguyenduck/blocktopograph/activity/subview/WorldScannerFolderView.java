@@ -30,6 +30,7 @@ public class WorldScannerFolderView implements SettingFragment.GetViewable {
 
         TextView description = layout.findViewById(R.id.description);
         description.setText(setting.getDescription());
+        description.setVisibility(setting.getDescription().isEmpty() ? View.GONE : View.VISIBLE);
 
         ListView listView = layout.findViewById(R.id.custom_folder);
         listView.setAdapter(new CustomFolderAdapter(listView, setting));

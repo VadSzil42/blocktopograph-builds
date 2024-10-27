@@ -16,5 +16,9 @@
 	<string name="play">Play</string>
 	<string name="nbt_editor">NBT Editor</string>
 	<string name="infomation">Infomation</string>
+    <string name="edit_world_scan_folders">Edit World Scan Folders</string>
+	<string name="delete_world_scan_folders">delete_world_scan_folders</string>
+	<string name="confirm_delete_path">Confirm Delete Path</string>
+    <string name="create_world_scan_folders">Create World Scan Folder</string>
 
 </resources>

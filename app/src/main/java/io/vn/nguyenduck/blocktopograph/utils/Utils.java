@@ -12,6 +12,8 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Utils {
     public static boolean includes(byte[] sub, byte[] main) {
@@ -73,5 +75,21 @@ public class Utils {
             transferred += read;
         }
         return transferred;
+    }
+
+    public static String uppercaseFirstAndAfterUnderscore(String input) {
+        if (input == null || input.isEmpty()) return input;
+
+        Pattern pattern = Pattern.compile("(^|_)([a-z])");
+        Matcher matcher = pattern.matcher(input);
+        StringBuffer sb = new StringBuffer();
+
+        while (matcher.find()) matcher.appendReplacement(sb,
+                (matcher.group(1).isEmpty() ? "" : " ") +
+                        matcher.group(2).toUpperCase()
+        );
+
+        matcher.appendTail(sb);
+        return sb.toString();
     }
 }
