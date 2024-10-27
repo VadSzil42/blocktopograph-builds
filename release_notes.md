@@ -26,8 +26,8 @@
 
 ### 24Oct24
 
-Removed Shizuku requirement for default folder access
-Added settings management system:
-  - Introduced setting.json configuration file
-  - Added customizable world scan folder configuration
-  - Implemented new settings UI with folder management
+ - Removed Shizuku requirement for default folder access
+ - Added settings management system:
+   - Introduced setting.json configuration file
+   - Added customizable world scan folder configuration
+   - Implemented new settings UI with folder management
