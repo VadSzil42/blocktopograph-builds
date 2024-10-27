@@ -77,11 +77,12 @@ public class Utils {
         return transferred;
     }
 
+    private static final Pattern UNDERSCORE_PATTERN = Pattern.compile("(^|_)([a-z])");
+
     public static String uppercaseFirstAndAfterUnderscore(String input) {
         if (input == null || input.isEmpty()) return input;
 
-        Pattern pattern = Pattern.compile("(^|_)([a-z])");
-        Matcher matcher = pattern.matcher(input);
+        Matcher matcher = UNDERSCORE_PATTERN.matcher(input);
         StringBuffer sb = new StringBuffer();
 
         while (matcher.find()) matcher.appendReplacement(sb,
