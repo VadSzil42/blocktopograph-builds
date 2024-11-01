@@ -38,16 +38,11 @@ public class WorldListFragment extends Fragment {
     private static List<String> WORLD_PATHS;
 
     private static final Map<String, WorldPreLoader> WORLDS = new TreeMap<>();
-    private static final List<String> WORLD_PATH = new ArrayList<>();
+    private static final List<String> WORLD_PATH_SCANNED = new ArrayList<>();
+    private static final List<String> WORLD_PATH_ACCEPTED = new ArrayList<>();
     private static final WorldListAdapter ADAPTER = new WorldListAdapter();
 
-    private static ExecutorService EXECUTOR_SERVICE;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EXECUTOR_SERVICE = Executors.newWorkStealingPool();
-    }
+    private static final ExecutorService EXECUTOR_SERVICE = Executors.newWorkStealingPool(1);
 
     @Nullable
     @Override
@@ -63,23 +58,29 @@ public class WorldListFragment extends Fragment {
     public void onResume() {
         super.onResume();
         var worldPaths = SettingManager.getInstance().get("blocktopograph.world_scan_folders");
-        if (worldPaths != null) WORLD_PATHS = (List<String>) worldPaths.value;
+        if (worldPaths != null) WORLD_PATHS = ((List<String>) worldPaths.value);
         EXECUTOR_SERVICE.submit(this::loadWorlds);
     }
 
     private void loadWorlds() {
-        WORLD_PATH.clear();
         for (String path : WORLD_PATHS) {
             for (File file : Objects.requireNonNull(new File(path).listFiles())) {
                 if (!file.isDirectory()) continue;
                 String p = file.getPath();
-                WORLD_PATH.add(p);
-                if (!WORLDS.containsKey(p)) {
-                    WORLDS.put(p, new WorldPreLoader(p));
-                    requireActivity().runOnUiThread(() ->
-                            ADAPTER.notifyItemChanged(WORLD_PATH.indexOf(p))
-                    );
-                } else Objects.requireNonNull(WORLDS.get(p)).update();
+                if (WORLD_PATH_SCANNED.contains(p)) continue;
+                WORLD_PATH_SCANNED.add(p);
+                if (WORLDS.containsKey(p)) {
+                    WORLDS.get(p).update();
+                } else {
+                    var world = new WorldPreLoader(p);
+                    if (world.getData() == null) continue;
+                    WORLD_PATH_ACCEPTED.add(p);
+                    WORLDS.put(p, world);
+                    int index = WORLD_PATH_ACCEPTED.indexOf(p);
+                    requireActivity().runOnUiThread(() -> {
+                        ADAPTER.notifyItemChanged(index);
+                    });
+                }
             }
         }
     }
@@ -96,21 +97,22 @@ public class WorldListFragment extends Fragment {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new RecyclerView.ViewHolder(LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.world_item, parent, false)) {
+            return new RecyclerView.ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.world_item, parent, false)) {
             };
         }
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            WorldPreLoader world = WORLDS.get(WORLD_PATH.get(position));
+            WorldPreLoader world = WORLDS.get(WORLD_PATH_ACCEPTED.get(position));
             View view = holder.itemView;
-
+            View infoContainer = view.findViewById(R.id.world_info_container);
             View floatingAction = view.findViewById(R.id.floating_action);
 
-            view.setOnClickListener(v -> {
-                if (currentSelected != null)
-                    currentSelected.itemView.findViewById(R.id.floating_action).setVisibility(View.GONE);
+            infoContainer.setOnClickListener(v -> {
+                if (currentSelected != null) currentSelected.itemView
+                        .findViewById(R.id.floating_action)
+                        .setVisibility(View.GONE);
+
                 if (holder.equals(currentSelected)) {
                     currentSelected = null;
                     floatingAction.setVisibility(View.GONE);
@@ -122,6 +124,7 @@ public class WorldListFragment extends Fragment {
 
             assert world != null;
             CompoundTag data = (CompoundTag) world.getData();
+            if (data == null) return;
 
             ImageView icon = view.findViewById(R.id.world_item_icon);
             Drawable iconDrawable = world.getIconDrawable();

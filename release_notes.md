@@ -31,3 +31,8 @@
     - Introduced setting.json configuration file
     - Added customizable world scan folder configuration
     - Implemented new settings UI with folder management
+
+### 01Nov24
+
+- Completed world scan folders system can add, edit, remove, save and load settings
+- Fix some error make app crash

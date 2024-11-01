@@ -4,38 +4,23 @@ import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION;
-import static io.vn.nguyenduck.blocktopograph.Constants.BOGGER;
 import static io.vn.nguyenduck.blocktopograph.utils.Utils.isAndroid11Up;
-import static io.vn.nguyenduck.blocktopograph.utils.Utils.transferStream;
-import static io.vn.nguyenduck.blocktopograph.utils.Utils.uppercaseFirstAndAfterUnderscore;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Pair;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
 import io.vn.nguyenduck.blocktopograph.R;
-import io.vn.nguyenduck.blocktopograph.setting.ASetting;
 import io.vn.nguyenduck.blocktopograph.setting.SettingManager;
 
 public class StartActivity extends AppCompatActivity {
@@ -83,7 +68,9 @@ public class StartActivity extends AppCompatActivity {
 //                startMainActivity();
 //            }
         else {
-            loadSetting();
+            SettingManager.initialize(this);
+            setupSettings();
+            SettingManager.getInstance().load();
             startMainActivity();
         }
     }
@@ -180,83 +167,13 @@ public class StartActivity extends AppCompatActivity {
         }
     }
 
-    private void loadSetting() {
-        File files = getExternalFilesDir(null);
-        File setting = new File(files, "setting.json");
-        if (!setting.exists()) {
-            try (InputStream is = getResources().getAssets().open("setting.json");
-                 OutputStream os = new FileOutputStream(setting)) {
-                setting.createNewFile();
-                transferStream(is, os);
-            } catch (Exception e) {
-                BOGGER.log(Level.SEVERE, "Failed to create setting file", e);
-            }
-        }
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(setting))) {
-            String s = reader.lines().collect(Collectors.joining());
-            JSONObject json = new JSONObject(s);
-            var keys = getAllKeys(json);
-            for (int i = 0; i < keys.size(); i++) {
-                var key = keys.get(i).first;
-                Object val = keys.get(i).second;
-                if (val instanceof JSONArray v) {
-                    val = new ArrayList<>();
-                    for (int j = 0; j < v.length(); j++) {
-                        ((List<Object>) val).add(v.opt(j));
-                    }
-                }
-                Object finalVal = val;
-                SettingManager.getInstance().add(new ASetting() {
-                    @Override
-                    public String getKey() {
-                        return key;
-                    }
-
-                    @Override
-                    public String getCategory() {
-                        return uppercaseFirstAndAfterUnderscore(key.split("\\.")[0]);
-                    }
-
-                    @Override
-                    public String getName() {
-                        return uppercaseFirstAndAfterUnderscore(key.split("\\.")[1]);
-                    }
-
-                    @Override
-                    public String getDescription() {
-                        return "";
-                    }
-
-                    @Override
-                    public Object getDefaultValue() {
-                        return finalVal;
-                    }
-                });
-            }
-        } catch (Exception e) {
-            BOGGER.log(Level.SEVERE, "Failed to load setting", e);
-        }
-    }
-
-    private List<Pair<String, Object>> getAllKeys(JSONObject json) {
-        List<Pair<String, Object>> result = new ArrayList<>();
-        traverse(json, "", result);
-        return result;
-    }
-
-    private void traverse(JSONObject jsonObject, String currentPath, List<Pair<String, Object>> result) {
-        Iterator<String> keys = jsonObject.keys();
-        while (keys.hasNext()) {
-            String key = keys.next();
-            Object value = jsonObject.opt(key);
-            String path = currentPath.isEmpty() ? key : currentPath + "." + key;
-
-            if (value instanceof JSONObject) {
-                traverse((JSONObject) value, path, result);
-            } else {
-                result.add(new Pair<>(path, value));
-            }
-        }
+    private void setupSettings() {
+        SettingManager.register(
+                "blocktopograph.world_scan_folders",
+                new ArrayList<>(),
+                "World Scan Folders",
+                "",
+                (Object v) -> Objects.toString(new HashSet<>((List<String>) v)),
+                (String v) -> new ArrayList<>(Arrays.asList(v.replaceAll("[\\[\\]]", "").split(","))));
     }
 }

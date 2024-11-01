@@ -12,6 +12,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import io.vn.nguyenduck.blocktopograph.R;
+import io.vn.nguyenduck.blocktopograph.setting.SettingManager;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,5 +28,11 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = NavHostFragment.findNavController(contentView);
 
         NavigationUI.setupWithNavController(bottomNavigationView, navController);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SettingManager.getInstance().save();
     }
 }

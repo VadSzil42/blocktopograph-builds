@@ -8,20 +8,6 @@
     android:paddingBottom="8dp"
     tools:showIn="@layout/setting_default_world_scan_folder">
 
-    <!--    <TextView-->
-    <!--        android:id="@+id/path"-->
-    <!--        android:layout_width="0dp"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:layout_weight="1"-->
-    <!--        android:background="@null"-->
-    <!--        android:ellipsize="end"-->
-    <!--        android:gravity="center_vertical"-->
-    <!--        android:maxLines="1"-->
-    <!--        android:textColor="@color/colorPrimary"-->
-    <!--        android:textSize="6pt"-->
-    <!--        android:theme="@style/MinecraftFont"-->
-    <!--        tools:text="/sdcard/games/com.mojang/minecraftWorlds" />-->
-
     <EditText
         android:id="@+id/path"
         android:layout_width="0dp"
@@ -31,20 +17,22 @@
         android:background="@null"
         android:ellipsize="end"
         android:gravity="center_vertical"
+        android:imeOptions="actionDone"
         android:importantForAutofill="no"
-        android:inputType="textNoSuggestions"
+        android:inputType="textUri"
         android:maxLines="1"
         android:textColor="@color/colorPrimary"
-        android:textSize="6pt"
+        android:textSize="7pt"
         android:theme="@style/MinecraftFont"
         tools:text="/sdcard/games/com.mojang/minecraftWorlds" />
 
     <ImageButton
-        android:layout_width="24dp"
-        android:layout_height="24dp"
-        android:background="@drawable/baseline_clear"
+        android:id="@+id/delete_btn"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="end"
+        android:background="@drawable/baseline_horizontal_rule"
         android:backgroundTint="@color/colorPrimary"
-        android:contentDescription="@string/confirm_delete_path"
-        android:visibility="gone" />
+        android:contentDescription="@string/delete_world_scan_folders" />
 
 </LinearLayout>

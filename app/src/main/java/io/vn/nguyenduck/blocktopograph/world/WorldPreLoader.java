@@ -17,7 +17,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
-import java.io.IOException;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -76,6 +75,7 @@ public class WorldPreLoader {
     }
 
     public Tag<?> getData() {
+        if (data == null) return null;
         if (tag == null) {
             try (var is = new FileInputStream(data);
                  var reader = new LittleEndianInputStream(is)) {
@@ -85,7 +85,7 @@ public class WorldPreLoader {
 
                 NBTInputStream dataStream = new NBTInputStream(is, 0, ByteOrder.LITTLE_ENDIAN);
                 tag = dataStream.readTag();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
