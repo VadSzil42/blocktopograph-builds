@@ -86,11 +86,14 @@ public final class SettingManager {
         if (!setting.exists()) return;
 
         try (Reader reader = new FileReader(setting)) {
-            char[] buffer = new char[(int) setting.length()];
-            reader.read(buffer);
-            String s = new String(buffer);
-            if (s.isEmpty()) return;
-            JSONObject json = new JSONObject(s);
+            BufferedReader bufferedReader = new BufferedReader(reader);
+            StringBuilder s = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                s.append(line);
+            }
+            if (s.toString().isEmpty()) return;
+            JSONObject json = new JSONObject(s.toString());
             var keys = getAllKeys(json);
             for (int i = 0; i < keys.size(); i++) {
                 String key = keys.get(i).first;
