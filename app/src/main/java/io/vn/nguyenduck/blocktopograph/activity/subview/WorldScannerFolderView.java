@@ -1,6 +1,5 @@
 package io.vn.nguyenduck.blocktopograph.activity.subview;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,19 +66,41 @@ public class WorldScannerFolderView implements SettingFragment.GetViewable {
 
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+
             View v = holder.itemView;
-            EditText editText = v.findViewById(R.id.path);
-            editText.setText(((List<String>) SETTING.value).get(position));
-            editText.setOnEditorActionListener((l, id, e) -> {
+            InputMethodManager imm = v.getContext().getSystemService(InputMethodManager.class);
+
+            TextView textView = v.findViewById(R.id.path);
+            EditText editText = v.findViewById(R.id.path_editable);
+
+            textView.setText(((List<String>) SETTING.value).get(position));
+
+            editText.setFocusable(true);
+
+            textView.setOnClickListener(view -> {
+                textView.setVisibility(View.GONE);
+                editText.setVisibility(View.VISIBLE);
+                editText.requestFocus();
+
+                editText.setText(textView.getText());
+                editText.setSelection(editText.getText().length());
+
+                imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+            });
+
+            editText.setOnEditorActionListener((view, id, e) -> {
                 if (id == EditorInfo.IME_ACTION_DONE) {
-                    InputMethodManager imm = (InputMethodManager) l.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(l.getWindowToken(), 0);
-                    ((List<String>) SETTING.value).set(position, l.getText().toString());
-                    l.clearFocus();
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                    ((List<String>) SETTING.value).set(position, view.getText().toString());
+                    textView.setText(view.getText());
+                    editText.clearFocus();
+                    editText.setVisibility(View.GONE);
+                    textView.setVisibility(View.VISIBLE);
                     return true;
                 }
                 return false;
             });
+
             VIEWS.add(v);
             v.findViewById(R.id.delete_btn).setOnClickListener(l -> {
                 ((List<String>) SETTING.value).remove(position);

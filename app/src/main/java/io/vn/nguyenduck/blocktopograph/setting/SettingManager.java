@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Function;
 import java.util.logging.Level;
 
@@ -24,15 +26,18 @@ public final class SettingManager {
     private static Context CONTEXT = null;
     private static SettingManager INSTANCE = null;
 
-    private final ArrayList<ASetting> settings = new ArrayList<>();
-    private final HashMap<String, Integer> path_map = new HashMap<>();
+    private static final ArrayList<ASetting> settings = new ArrayList<>();
+    private static final HashMap<String, Integer> path_map = new HashMap<>();
+
+    private static final ExecutorService loaderPool = Executors.newWorkStealingPool();
+    private static final ExecutorService saverPool = Executors.newWorkStealingPool();
 
     private SettingManager() {
     }
 
     public static void initialize(Context context) {
         if (INSTANCE != null) return;
-        CONTEXT = context;
+        CONTEXT = context.getApplicationContext();
         INSTANCE = new SettingManager();
     }
 
@@ -46,13 +51,12 @@ public final class SettingManager {
     }
 
     public static void register(String path, Object defaultValue, String name, String description) {
-        INSTANCE.path_map.put(path, INSTANCE.settings.size());
-        INSTANCE.settings.add(new ASetting(path, defaultValue, name, description));
+        register(path, defaultValue, name, description, null, null);
     }
 
     public static void register(String path, Object defaultValue, String name, String description, Function<Object, String> toString, Function<String, Object> fromString) {
-        INSTANCE.path_map.put(path, INSTANCE.settings.size());
-        INSTANCE.settings.add(new ASetting(path, defaultValue, name, description, toString, fromString));
+        path_map.put(path, settings.size());
+        settings.add(new ASetting(path, defaultValue, name, description, toString, fromString));
     }
 
     @SuppressWarnings("unchecked")
@@ -80,8 +84,12 @@ public final class SettingManager {
         }
     }
 
+    public static void forceLoad() {
+        if (!loaderPool.isShutdown()) loaderPool.submit(SettingManager::load);
+    }
+
     @SuppressWarnings("ResultOfMethodCallIgnored")
-    public void load() {
+    private static void load() {
         File setting = new File(CONTEXT.getExternalFilesDir(null), "setting.json");
         if (!setting.exists()) return;
 
@@ -96,9 +104,9 @@ public final class SettingManager {
                 String key = keys.get(i).first;
                 Object val = keys.get(i).second;
                 if (path_map.containsKey(key)) {
-                    var path = path_map.get(key);
-                    assert path != null;
-                    var aSetting = settings.get(path);
+                    var index = path_map.get(key);
+                    assert index != null;
+                    var aSetting = settings.get(index);
                     aSetting.value = aSetting.fromString.apply(val.toString());
                 }
             }
@@ -107,7 +115,11 @@ public final class SettingManager {
         }
     }
 
-    public void save() {
+    public static void forceSave() {
+        if (!saverPool.isShutdown()) saverPool.submit(SettingManager::save);
+    }
+
+    private static void save() {
         File setting = new File(CONTEXT.getExternalFilesDir(null), "setting.json");
 
         try {
@@ -125,7 +137,7 @@ public final class SettingManager {
                     if (!json2.has(spl[i])) json2.put(spl[i], new JSONObject());
                     json2 = json2.getJSONObject(spl[i]);
                 }
-                json2.put(spl[spl.length - 1] ,v.toString.apply(v.value));
+                json2.put(spl[spl.length - 1], v.toString.apply(v.value));
             }
             write.write(json.toString());
         } catch (Exception e) {
@@ -133,13 +145,18 @@ public final class SettingManager {
         }
     }
 
-    private List<Pair<String, Object>> getAllKeys(JSONObject json) {
+    public static void shutdown() {
+        if (!loaderPool.isShutdown()) loaderPool.shutdown();
+        if (!saverPool.isShutdown()) saverPool.shutdown();
+    }
+
+    private static List<Pair<String, Object>> getAllKeys(JSONObject json) {
         List<Pair<String, Object>> result = new ArrayList<>();
         traverse(json, "", result);
         return result;
     }
 
-    private void traverse(JSONObject jsonObject, String currentPath, List<Pair<String, Object>> result) {
+    private static void traverse(JSONObject jsonObject, String currentPath, List<Pair<String, Object>> result) {
         Iterator<String> keys = jsonObject.keys();
         while (keys.hasNext()) {
             String key = keys.next();

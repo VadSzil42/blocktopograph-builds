@@ -26,18 +26,13 @@ import io.vn.nguyenduck.blocktopograph.setting.SettingManager;
 public class StartActivity extends AppCompatActivity {
 
     private final int STORAGE_PERMISSION_CODE = 0x7832;
-//    private final int SHIZUKU_PERMISSION_CODE = 0xbfde;
 
     private boolean StoragePermission = false;
-//    private boolean ShizukuPermission = false;
-//    private boolean ShizukuInstalled = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start_activity);
-
-//        Shizuku.addRequestPermissionResultListener(REQUEST_PERMISSION_RESULT_LISTENER);
     }
 
     private void startMainActivity() {
@@ -50,8 +45,6 @@ public class StartActivity extends AppCompatActivity {
         super.onResume();
 
         StoragePermission = StoragePermission || hasFileAccessPermission();
-//        ShizukuInstalled = ShizukuInstalled || hasInstalledShizuku();
-//        ShizukuPermission = ShizukuPermission || hasShizukuPermission();
 
         if (!StoragePermission) requestStoragePermission();
 //        if (isAndroid11Up()) {
@@ -64,22 +57,12 @@ public class StartActivity extends AppCompatActivity {
 //            } else if (!ShizukuPermission) {
 //                Shizuku.requestPermission(SHIZUKU_PERMISSION_CODE);
 //            }
-//            if (StoragePermission && ShizukuPermission) {
-//                startMainActivity();
-//            }
         else {
             SettingManager.initialize(this);
             setupSettings();
-            SettingManager.getInstance().load();
+            SettingManager.forceLoad();
             startMainActivity();
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-//        Shizuku.removeRequestPermissionResultListener(REQUEST_PERMISSION_RESULT_LISTENER);
     }
 
 //    private boolean hasInstalledShizuku() {

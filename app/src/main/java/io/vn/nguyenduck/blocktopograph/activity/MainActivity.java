@@ -33,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        SettingManager.getInstance().save();
+        SettingManager.forceSave();
+        SettingManager.shutdown();
     }
 }

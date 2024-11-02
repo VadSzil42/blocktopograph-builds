@@ -16,9 +16,11 @@ import androidx.recyclerview.widget.RecyclerView.Adapter;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import java.io.File;
+import java.lang.ref.WeakReference;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -37,9 +39,9 @@ public class WorldListFragment extends Fragment {
 
     private static List<String> WORLD_PATHS;
 
-    private static final Map<String, WorldPreLoader> WORLDS = new TreeMap<>();
-    private static final List<String> WORLD_PATH_SCANNED = new ArrayList<>();
-    private static final List<String> WORLD_PATH_ACCEPTED = new ArrayList<>();
+    private static final Map<String, WorldPreLoader> WORLDS = Collections.synchronizedMap(new TreeMap<>());
+    private static final List<String> WORLD_PATH_SCANNED = Collections.synchronizedList(new ArrayList<>());
+    private static final List<String> WORLD_PATH_ACCEPTED = Collections.synchronizedList(new ArrayList<>());
     private static final WorldListAdapter ADAPTER = new WorldListAdapter();
 
     private static final ExecutorService EXECUTOR_SERVICE = Executors.newWorkStealingPool(1);
@@ -60,6 +62,12 @@ public class WorldListFragment extends Fragment {
         var worldPaths = SettingManager.getInstance().get("blocktopograph.world_scan_folders");
         if (worldPaths != null) WORLD_PATHS = ((List<String>) worldPaths.value);
         EXECUTOR_SERVICE.submit(this::loadWorlds);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EXECUTOR_SERVICE.shutdown();
     }
 
     private void loadWorlds() {
@@ -92,7 +100,7 @@ public class WorldListFragment extends Fragment {
         private static final int GAMEMODE_SPECTATOR = R.string.gamemode_spectator;
         private static final int GAMEMODE_SURVIVAL = R.string.gamemode_survival;
 
-        private ViewHolder currentSelected = null;
+        private WeakReference<ViewHolder> currentSelected = new WeakReference<>(null);
 
         @NonNull
         @Override
@@ -109,15 +117,15 @@ public class WorldListFragment extends Fragment {
             View floatingAction = view.findViewById(R.id.floating_action);
 
             infoContainer.setOnClickListener(v -> {
-                if (currentSelected != null) currentSelected.itemView
+                var selected = currentSelected.get();
+                if (selected != null) selected.itemView
                         .findViewById(R.id.floating_action)
                         .setVisibility(View.GONE);
-
-                if (holder.equals(currentSelected)) {
-                    currentSelected = null;
+                if (holder.equals(selected)) {
+                    currentSelected.clear();
                     floatingAction.setVisibility(View.GONE);
                 } else {
-                    currentSelected = holder;
+                    currentSelected = new WeakReference<>(holder);
                     floatingAction.setVisibility(View.VISIBLE);
                 }
             });

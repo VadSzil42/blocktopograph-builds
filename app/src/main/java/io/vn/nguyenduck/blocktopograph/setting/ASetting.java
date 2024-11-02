@@ -13,13 +13,7 @@ public class ASetting {
     public final Function<String, Object> fromString;
 
     public ASetting(String path, Object defaultValue, String name, String description) {
-        this.path = path;
-        this.defaultValue = defaultValue;
-        this.name = name;
-        this.description = description;
-        this.value = defaultValue;
-        this.toString = Objects::toString;
-        this.fromString = v -> v;
+        this(path, defaultValue, name, description, Objects::toString, v -> v);
     }
 
     public ASetting(String path, Object defaultValue, String name, String description, Function<Object, String> toString, Function<String, Object> fromString) {
@@ -28,6 +22,8 @@ public class ASetting {
         this.name = name;
         this.description = description;
         this.value = defaultValue;
+        if (toString == null) toString = Objects::toString;
+        if (fromString == null) fromString = v -> v;
         this.toString = toString;
         this.fromString = fromString;
     }
