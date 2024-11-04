@@ -35,6 +35,7 @@
 ### 01Nov24
 
 - Completed world scan folders system:
-    - Added ability to add, edit, and remove scan folders
-    - Implemented settings persistence (save/load)
-- Fixed world loader update item make app crash
+   - Enhanced the initial settings implementation
+   - Added ability to add, edit, and remove scan folders
+   - Implemented settings persistence (save/load)
+- Fixed application crash in world loader during item updates

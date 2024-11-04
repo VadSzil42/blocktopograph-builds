@@ -99,9 +99,13 @@ require(["vs/editor/editor.main"], () => {
     double d: 4378247901389481.3472747837286
     string S: "Hello, World!"
     object o: {
-        string S: "feujs"
+        string s: "example",
+        int value: 42,
+        object nested: {
+            float f: 1.23
+        }
     }
-    
+
     byte[] b: [1]
     short[] s: [1623]
     int[] i: [0x0003274]
@@ -111,7 +115,11 @@ require(["vs/editor/editor.main"], () => {
     string[] S: ["Hello, World!"]
     object[] o: [
         {
-            string S: "feujs"
+            string s: "example",
+            int value: 42,
+            object nested: {
+                float f: 1.23
+            }
         }
     ]
 }`);
