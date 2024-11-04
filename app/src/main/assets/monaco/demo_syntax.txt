@@ -1,0 +1,25 @@
+{
+    byte b: 1
+    short s: 1623
+    int i: 0x0003274
+    long l: 7327483298
+    float f: 0.0121789
+    double d: 4378247901389481.3472747837286
+    string S: "Hello, World!"
+    object o: {
+        string S: "feujs"
+    }
+    
+    byte[] b: [1]
+    short[] s: [1623]
+    int[] i: [0x0003274]
+    long[] l: [7327483298]
+    float[] f: [0.0121789]
+    double[] d: [4378247901389481.3472747837286]
+    string[] S: ["Hello, World!"]
+    object[] o: [
+        {
+            string S: "feujs"
+        }
+    ]
+}

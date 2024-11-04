@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "checkJs": true,
+        "baseUrl": ".",
+        "typeRoots": ["./"]
+    },
+    "include": ["./*.js", "./monaco.d.ts"],
+    "exclude": ["./vs"]
+}

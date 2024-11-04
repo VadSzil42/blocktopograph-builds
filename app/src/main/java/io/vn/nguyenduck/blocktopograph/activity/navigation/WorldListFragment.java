@@ -1,5 +1,6 @@
 package io.vn.nguyenduck.blocktopograph.activity.navigation;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -31,6 +32,7 @@ import java.util.concurrent.Executors;
 
 import de.piegames.nbt.CompoundTag;
 import io.vn.nguyenduck.blocktopograph.R;
+import io.vn.nguyenduck.blocktopograph.activity.NBTEditorActivity;
 import io.vn.nguyenduck.blocktopograph.setting.SettingManager;
 import io.vn.nguyenduck.blocktopograph.utils.Utils;
 import io.vn.nguyenduck.blocktopograph.world.WorldPreLoader;
@@ -42,7 +44,7 @@ public class WorldListFragment extends Fragment {
     private static final Map<String, WorldPreLoader> WORLDS = Collections.synchronizedMap(new TreeMap<>());
     private static final List<String> WORLD_PATH_SCANNED = Collections.synchronizedList(new ArrayList<>());
     private static final List<String> WORLD_PATH_ACCEPTED = Collections.synchronizedList(new ArrayList<>());
-    private static final WorldListAdapter ADAPTER = new WorldListAdapter();
+    private static WorldListAdapter ADAPTER;
 
     private static final ExecutorService EXECUTOR_SERVICE = Executors.newWorkStealingPool(1);
 
@@ -51,6 +53,7 @@ public class WorldListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.world_list_fragment, container, false);
         RecyclerView recyclerView = v.findViewById(R.id.world_list);
+        ADAPTER = new WorldListAdapter(this);
         recyclerView.setAdapter(ADAPTER);
         return v;
     }
@@ -100,6 +103,12 @@ public class WorldListFragment extends Fragment {
         private static final int GAMEMODE_SPECTATOR = R.string.gamemode_spectator;
         private static final int GAMEMODE_SURVIVAL = R.string.gamemode_survival;
 
+        private final Fragment fragment;
+
+        public WorldListAdapter(Fragment fragment) {
+            this.fragment = fragment;
+        }
+
         private WeakReference<ViewHolder> currentSelected = new WeakReference<>(null);
 
         @NonNull
@@ -115,6 +124,14 @@ public class WorldListFragment extends Fragment {
             View view = holder.itemView;
             View infoContainer = view.findViewById(R.id.world_info_container);
             View floatingAction = view.findViewById(R.id.floating_action);
+
+            TextView play_btn = floatingAction.findViewById(R.id.play_btn);
+            TextView nbt_editor_btn = floatingAction.findViewById(R.id.nbt_editor_btn);
+            TextView info_btn = floatingAction.findViewById(R.id.info_btn);
+
+            nbt_editor_btn.setOnClickListener(v -> {
+                fragment.requireActivity().startActivity(new Intent(fragment.requireActivity(), NBTEditorActivity.class));
+            });
 
             infoContainer.setOnClickListener(v -> {
                 var selected = currentSelected.get();

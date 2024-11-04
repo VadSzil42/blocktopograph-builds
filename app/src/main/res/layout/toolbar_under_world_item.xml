@@ -19,6 +19,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/play_btn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fontFamily="@font/minecraft_seven"
@@ -37,6 +38,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/nbt_editor_btn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fontFamily="@font/minecraft_seven"
@@ -55,6 +57,7 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/info_btn"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fontFamily="@font/minecraft_seven"
