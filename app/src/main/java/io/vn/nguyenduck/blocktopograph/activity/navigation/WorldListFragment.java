@@ -105,8 +105,7 @@ public class WorldListFragment extends Fragment {
                     if (world.getLevelData() == null) continue;
                     WORLD_PATH_ACCEPTED.add(p);
                     WORLDS.put(p, world);
-                    int index = WORLD_PATH_ACCEPTED.indexOf(p);
-                    requireActivity().runOnUiThread(() -> ADAPTER.notifyItemChanged(index));
+                    requireActivity().runOnUiThread(() -> ADAPTER.notifyItemInserted(ADAPTER.getItemCount() - 1));
                 }
             }
         }
