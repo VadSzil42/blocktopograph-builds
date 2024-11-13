@@ -15,7 +15,6 @@
             android:orientation="vertical">
 
             <ImageView
-                android:id="@+id/logo"
                 android:layout_width="170dp"
                 android:layout_height="170dp"
                 app:srcCompat="@drawable/ic_launcher_round" />
@@ -37,8 +36,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:maxWidth="320dp"
-                android:text="Starting..."
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                tools:text="Starting..." />
 
         </LinearLayout>
 

@@ -5,15 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="5dp"
-    android:background="@color/activated_bg_color"
+    android:background="@color/activatedBgColor"
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/world_info_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="3dp"
-        android:orientation="horizontal"
-        tools:ignore="UselessParent">
+        android:layout_margin="3dp">
 
         <ImageView
             android:id="@+id/world_item_icon"
@@ -42,20 +41,19 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="2dp"
-                android:orientation="horizontal">
+                android:layout_margin="2dp">
 
                 <TextView
                     android:id="@+id/world_item_gamemode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="0dp"
-                    android:background="@color/activated_bg_color"
+                    android:background="@color/activatedBgColor"
                     android:fontFamily="@font/minecraft_seven"
                     android:paddingStart="5dp"
                     android:paddingTop="2dp"
                     android:paddingEnd="5dp"
-                    android:paddingBottom="2dp"
+                    android:paddingBottom="3dp"
                     android:textColor="@android:color/white"
                     tools:text="Spectator" />
 
@@ -69,7 +67,7 @@
                     android:paddingStart="5dp"
                     android:paddingTop="2dp"
                     android:paddingEnd="5dp"
-                    android:paddingBottom="2dp"
+                    android:paddingBottom="3dp"
                     android:text="@string/world_expermental_mode"
                     android:textColor="@android:color/black" />
 
@@ -103,8 +101,9 @@
     </LinearLayout>
 
     <include
-        android:id="@+id/toolbar_under_world_item"
+        android:id="@+id/floating_action"
         layout="@layout/toolbar_under_world_item"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:visibility="visible" />
 
 </LinearLayout>
