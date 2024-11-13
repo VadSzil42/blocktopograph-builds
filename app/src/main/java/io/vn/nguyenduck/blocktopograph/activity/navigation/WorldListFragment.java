@@ -1,7 +1,5 @@
 package io.vn.nguyenduck.blocktopograph.activity.navigation;
 
-import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +12,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.Adapter;
-import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -29,31 +26,52 @@ import java.util.Objects;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Function;
 
-import de.piegames.nbt.CompoundTag;
 import io.vn.nguyenduck.blocktopograph.R;
-import io.vn.nguyenduck.blocktopograph.activity.NBTEditorActivity;
+import io.vn.nguyenduck.blocktopograph.activity.subview.NBTEditorFragment;
 import io.vn.nguyenduck.blocktopograph.setting.SettingManager;
 import io.vn.nguyenduck.blocktopograph.utils.Utils;
 import io.vn.nguyenduck.blocktopograph.world.WorldPreLoader;
+import io.vn.nguyenduck.nbt.tags.CompoundTag;
+import io.vn.nguyenduck.nbt.tags.LongTag;
 
 public class WorldListFragment extends Fragment {
 
     private static List<String> WORLD_PATHS;
 
-    private static final Map<String, WorldPreLoader> WORLDS = Collections.synchronizedMap(new TreeMap<>());
-    private static final List<String> WORLD_PATH_SCANNED = Collections.synchronizedList(new ArrayList<>());
-    private static final List<String> WORLD_PATH_ACCEPTED = Collections.synchronizedList(new ArrayList<>());
+    private static Map<String, WorldPreLoader> WORLDS;
+    private static List<String> WORLD_PATH_SCANNED;
+    private static List<String> WORLD_PATH_ACCEPTED;
     private static WorldListAdapter ADAPTER;
 
-    private static final ExecutorService EXECUTOR_SERVICE = Executors.newWorkStealingPool(1);
+    private static ExecutorService EXECUTOR_SERVICE;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        WORLDS = Collections.synchronizedMap(new TreeMap<>());
+        WORLD_PATH_SCANNED = Collections.synchronizedList(new ArrayList<>());
+        WORLD_PATH_ACCEPTED = Collections.synchronizedList(new ArrayList<>());
+        EXECUTOR_SERVICE = Executors.newWorkStealingPool(1);
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.world_list_fragment, container, false);
         RecyclerView recyclerView = v.findViewById(R.id.world_list);
-        ADAPTER = new WorldListAdapter(this);
+        ADAPTER = new WorldListAdapter((WorldPreLoader world) -> {
+            var nbtEditorFragment = new NBTEditorFragment();
+            nbtEditorFragment.setWorld(world);
+
+            requireActivity().getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.content_view, nbtEditorFragment)
+                    .addToBackStack(null)
+                    .commit();
+
+            return null;
+        });
         recyclerView.setAdapter(ADAPTER);
         return v;
     }
@@ -64,7 +82,7 @@ public class WorldListFragment extends Fragment {
         super.onResume();
         var worldPaths = SettingManager.getInstance().get("blocktopograph.world_scan_folders");
         if (worldPaths != null) WORLD_PATHS = ((List<String>) worldPaths.value);
-        EXECUTOR_SERVICE.submit(this::loadWorlds);
+        if (!EXECUTOR_SERVICE.isShutdown()) EXECUTOR_SERVICE.submit(this::loadWorlds);
     }
 
     @Override
@@ -84,13 +102,11 @@ public class WorldListFragment extends Fragment {
                     WORLDS.get(p).update();
                 } else {
                     var world = new WorldPreLoader(p);
-                    if (world.getData() == null) continue;
+                    if (world.getLevelData() == null) continue;
                     WORLD_PATH_ACCEPTED.add(p);
                     WORLDS.put(p, world);
                     int index = WORLD_PATH_ACCEPTED.indexOf(p);
-                    requireActivity().runOnUiThread(() -> {
-                        ADAPTER.notifyItemChanged(index);
-                    });
+                    requireActivity().runOnUiThread(() -> ADAPTER.notifyItemChanged(index));
                 }
             }
         }
@@ -103,10 +119,10 @@ public class WorldListFragment extends Fragment {
         private static final int GAMEMODE_SPECTATOR = R.string.gamemode_spectator;
         private static final int GAMEMODE_SURVIVAL = R.string.gamemode_survival;
 
-        private final Fragment fragment;
+        private final Function<WorldPreLoader, Void> callback;
 
-        public WorldListAdapter(Fragment fragment) {
-            this.fragment = fragment;
+        public WorldListAdapter(Function<WorldPreLoader, Void> onClickCallback) {
+            this.callback = onClickCallback;
         }
 
         private WeakReference<ViewHolder> currentSelected = new WeakReference<>(null);
@@ -114,23 +130,22 @@ public class WorldListFragment extends Fragment {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            return new RecyclerView.ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.world_item, parent, false)) {
+            return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.world_item, parent, false)) {
             };
         }
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             WorldPreLoader world = WORLDS.get(WORLD_PATH_ACCEPTED.get(position));
-            View view = holder.itemView;
-            View infoContainer = view.findViewById(R.id.world_info_container);
-            View floatingAction = view.findViewById(R.id.floating_action);
+            View infoContainer = holder.infoContainer;
+            View floatingAction = holder.floatingAction;
 
             TextView play_btn = floatingAction.findViewById(R.id.play_btn);
             TextView nbt_editor_btn = floatingAction.findViewById(R.id.nbt_editor_btn);
             TextView info_btn = floatingAction.findViewById(R.id.info_btn);
 
             nbt_editor_btn.setOnClickListener(v -> {
-                fragment.requireActivity().startActivity(new Intent(fragment.requireActivity(), NBTEditorActivity.class));
+                callback.apply(world);
             });
 
             infoContainer.setOnClickListener(v -> {
@@ -148,45 +163,67 @@ public class WorldListFragment extends Fragment {
             });
 
             assert world != null;
-            CompoundTag data = (CompoundTag) world.getData();
+            var data = world.getLevelData();
             if (data == null) return;
 
-            ImageView icon = view.findViewById(R.id.world_item_icon);
-            Drawable iconDrawable = world.getIconDrawable();
+            var icon = holder.icon;
+            var iconDrawable = world.getIconDrawable();
             if (iconDrawable != null) icon.setImageDrawable(iconDrawable);
-            else if (data.getIntValue("Generator").get() == 2)
+            else if (data.getValue("Generator").getValue().equals(2))
                 icon.setImageResource(R.drawable.world_preview_flat);
             else icon.setImageResource(R.drawable.world_preview_default);
 
-            TextView name = view.findViewById(R.id.world_item_name);
-            name.setText(world.getName());
+            holder.name.setText(world.getName());
 
-            TextView gamemode = view.findViewById(R.id.world_item_gamemode);
-            Integer gamemodeResId = switch (data.getByteValue("ForceGameType").get()) {
-                case 1 -> GAMEMODE_CREATIVE;
-                case 2 -> GAMEMODE_ADVENTURE;
-                case 3 -> GAMEMODE_SPECTATOR;
-                default -> GAMEMODE_SURVIVAL;
-            };
-            gamemode.setText(gamemodeResId);
+            try {
+                holder.gamemode.setText(switch ((byte) data.getValue("ForceGameType").getValue()) {
+                    case 1 -> GAMEMODE_CREATIVE;
+                    case 2 -> GAMEMODE_ADVENTURE;
+                    case 3 -> GAMEMODE_SPECTATOR;
+                    default -> GAMEMODE_SURVIVAL;
+                });
 
-            TextView experimental = view.findViewById(R.id.world_item_experimental);
-            CompoundTag exp = data.getAsCompoundTag("experiments").get();
-            if (exp.getValue().values().stream().allMatch(v -> (byte) v.getValue() == 0))
-                experimental.setVisibility(View.GONE);
+                var exp = (CompoundTag<?>) data.getValue("experiments");
+                if (exp.getValue().values().stream().allMatch(v -> v.getValue().equals(0)))
+                    holder.experimental.setVisibility(View.GONE);
 
-            TextView lastPlay = view.findViewById(R.id.world_item_last_play);
-            Long time = data.getLongValue("LastPlayed").get();
-            DateFormat formater = SimpleDateFormat.getDateInstance(2);
-            lastPlay.setText(formater.format(new Date(time * 1000)));
+                var time = (LongTag) data.getValue("LastPlayed");
+                DateFormat formater = SimpleDateFormat.getDateInstance(2);
+                holder.lastPlay.setText(formater.format(new Date(time.getValue() * 1000)));
+            } catch (Exception ignored) {}
 
-            TextView size = view.findViewById(R.id.world_item_size);
-            size.setText(Utils.translateSizeToString(Utils.getSizeOf(world.path)));
+            holder.size.setText(Utils.translateSizeToString(Utils.getSizeOf(world.file)));
         }
 
         @Override
         public int getItemCount() {
             return WORLDS.size();
+        }
+    }
+
+    private static class ViewHolder extends RecyclerView.ViewHolder {
+
+        public final View infoContainer;
+        public final View floatingAction;
+
+        public final ImageView icon;
+        public final TextView name;
+        public final TextView gamemode;
+        public final TextView experimental;
+        public final TextView lastPlay;
+        public final TextView size;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            infoContainer = itemView.findViewById(R.id.world_info_container);
+            floatingAction = itemView.findViewById(R.id.floating_action);
+
+            icon = itemView.findViewById(R.id.world_item_icon);
+            name = itemView.findViewById(R.id.world_item_name);
+            gamemode = itemView.findViewById(R.id.world_item_gamemode);
+            experimental = itemView.findViewById(R.id.world_item_experimental);
+            lastPlay = itemView.findViewById(R.id.world_item_last_play);
+            size = itemView.findViewById(R.id.world_item_size);
         }
     }
 }

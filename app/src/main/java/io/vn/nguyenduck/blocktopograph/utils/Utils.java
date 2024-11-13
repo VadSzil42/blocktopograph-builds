@@ -93,4 +93,16 @@ public class Utils {
         matcher.appendTail(sb);
         return sb.toString();
     }
+
+    public static String translateEscapes(String s) {
+        if (s.isEmpty()) return "";
+
+        s = s.replace("\b", "\\b")
+                .replace("\f", "\\f")
+                .replace("\n", "\\n")
+                .replace("\r", "\\r")
+                .replace("\t", "\\t");
+
+        return s;
+    }
 }

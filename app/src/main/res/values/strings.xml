@@ -20,5 +20,6 @@
 	<string name="delete_world_scan_folders">delete_world_scan_folders</string>
 	<string name="confirm_delete_path">Confirm Delete Path</string>
     <string name="create_world_scan_folders">Create World Scan Folder</string>
+    <string name="x_is_invalid">%s is not a valid value</string>
 
 </resources>
