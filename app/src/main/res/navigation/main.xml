@@ -4,18 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     app:startDestination="@id/navigation_world">
 
-    <fragment
-        android:id="@+id/navigation_create"
-        android:name="io.vn.nguyenduck.blocktopograph.activity.navigation.CreateFragment"
-        tools:layout="@layout/world_list_fragment"/>
+<!--    <fragment-->
+<!--        android:id="@+id/navigation_create"-->
+<!--        android:name="io.vn.nguyenduck.blocktopograph.activity.navigation.CreateFragment"-->
+<!--        tools:layout="@layout/world_list_fragment" />-->
 
     <fragment
         android:id="@+id/navigation_world"
         android:name="io.vn.nguyenduck.blocktopograph.activity.navigation.WorldListFragment"
-        tools:layout="@layout/world_list_fragment"/>
+        tools:layout="@layout/world_list_fragment" />
 
     <fragment
         android:id="@+id/navigation_setting"
         android:name="io.vn.nguyenduck.blocktopograph.activity.navigation.SettingFragment"
-        tools:layout="@layout/world_list_fragment"/>
+        tools:layout="@layout/setting_fragment" />
 </navigation>

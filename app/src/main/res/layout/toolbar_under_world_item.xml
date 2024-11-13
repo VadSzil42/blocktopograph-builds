@@ -1,32 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.flexbox.FlexboxLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:justifyContent="space_evenly"
-    tools:showIn="@layout/world_item">
+    android:background="@color/blackOverlay"
+    android:orientation="horizontal"
+    android:padding="5dp"
+    app:justifyContent="space_evenly">
 
     <Space
         android:layout_width="0dp"
-        android:layout_height="wrap_content" />
+        android:layout_height="0dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/play_btn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/minecraft_seven"
+            android:gravity="center"
+            android:text="@string/play"
+            android:textColor="@color/colorPrimary"
+            app:drawableTint="@color/colorPrimary"
+            app:drawableTopCompat="@drawable/baseline_play_arrow" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/nbt_editor_btn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/minecraft_seven"
+            android:gravity="center"
+            android:text="@string/nbt_editor"
+            android:textColor="@color/colorPrimary"
+            app:drawableTint="@color/colorPrimary"
+            app:drawableTopCompat="@drawable/baseline_edit_document" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/info_btn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/minecraft_seven"
+            android:gravity="center"
+            android:text="@string/infomation"
+            android:textColor="@color/colorPrimary"
+            app:drawableTint="@color/colorPrimary"
+            app:drawableTopCompat="@drawable/baseline_info_outline" />
+
+    </LinearLayout>
 
     <Space
         android:layout_width="0dp"
-        android:layout_height="wrap_content" />
+        android:layout_height="0dp" />
 
 </com.google.android.flexbox.FlexboxLayout>
