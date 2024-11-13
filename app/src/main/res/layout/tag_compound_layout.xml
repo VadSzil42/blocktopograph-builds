@@ -22,4 +22,14 @@
         android:textSize="19sp"
         tools:text="Tag name here" />
 
+    <View
+        android:id="@+id/tag_value"
+        android:layout_width="0dp"
+        android:layout_height="0dp" />
+
+    <View
+        android:id="@+id/tag_value_edit"
+        android:layout_width="0dp"
+        android:layout_height="0dp" />
+
 </LinearLayout>
