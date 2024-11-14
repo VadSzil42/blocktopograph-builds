@@ -102,12 +102,11 @@ public class WorldListFragment extends Fragment {
                 if (WORLDS.containsKey(p)) WORLDS.get(p).update();
                 else {
                     var world = new WorldPreLoader(p);
+                    if (!world.hasData()) continue;
+                    world.update();
                     WORLD_PATH_ACCEPTED.add(p);
                     WORLDS.put(p, world);
-                    world.update();
-                    requireActivity().runOnUiThread(() -> {
-                        ADAPTER.notifyItemInserted(ADAPTER.getItemCount() - 1);
-                    });
+                    requireActivity().runOnUiThread(() -> ADAPTER.notifyItemChanged(ADAPTER.getItemCount() - 1));
                 }
             }
         }

@@ -26,17 +26,20 @@ public class WorldPreLoader {
     public final String path;
     public File icon;
     private File data;
-    private final LevelDataLoader levelData;
+    private LevelDataLoader levelData;
 
     public WorldPreLoader(String worldPath) {
         file = new File(worldPath);
         path = file.getPath();
-        levelData = new LevelDataLoader(new File(file, "level.dat"));
     }
 
     public void update() {
         icon = fetchIcon();
         data = fetchWorldData();
+    }
+
+    public boolean hasData() {
+        return new File(file, "level.dat").exists();
     }
 
     @Nullable
@@ -73,6 +76,8 @@ public class WorldPreLoader {
     }
 
     public CompoundTag<?> getLevelData() {
+        if (data == null) return null;
+        if (levelData == null) levelData = new LevelDataLoader(data);
         try {
             levelData.load();
         } catch (Exception e) {

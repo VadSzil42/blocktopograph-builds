@@ -7,6 +7,7 @@ import static android.provider.Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSIO
 import static io.vn.nguyenduck.blocktopograph.utils.Utils.isAndroid11Up;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
 
@@ -43,6 +44,13 @@ public class StartActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        SharedPreferences prefs = getSharedPreferences("crash_info", MODE_PRIVATE);
+        String stackTrace = prefs.getString("stack_trace", null);
+        if (stackTrace != null) {
+            finish();
+            return;
+        }
 
         StoragePermission = StoragePermission || hasFileAccessPermission();
 

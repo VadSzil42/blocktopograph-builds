@@ -48,8 +48,8 @@ public class WorldScannerFolderView implements SettingFragment.GetViewable {
         addButton.setOnClickListener(v -> {
             if (!VIEWS.isEmpty()) {
                 var last = VIEWS.get(VIEWS.size() - 1);
-                EditText editText = last.findViewById(R.id.path);
-                if (editText.getText().toString().equals("/sdcard")) return;
+                TextView textView = last.findViewById(R.id.path);
+                if (textView.getText().equals("/sdcard")) return;
             }
             ((List<String>) SETTING.value).add("/sdcard");
             adapter.notifyItemInserted(VIEWS.size());
