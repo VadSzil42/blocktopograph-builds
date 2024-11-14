@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -93,19 +92,22 @@ public class WorldListFragment extends Fragment {
 
     private void loadWorlds() {
         for (String path : WORLD_PATHS) {
-            for (File file : Objects.requireNonNull(new File(path).listFiles())) {
+            var files = new File(path).listFiles();
+            if (files == null) continue;
+            for (File file : files) {
                 if (!file.isDirectory()) continue;
                 String p = file.getPath();
                 if (WORLD_PATH_SCANNED.contains(p)) continue;
                 WORLD_PATH_SCANNED.add(p);
-                if (WORLDS.containsKey(p)) {
-                    WORLDS.get(p).update();
-                } else {
+                if (WORLDS.containsKey(p)) WORLDS.get(p).update();
+                else {
                     var world = new WorldPreLoader(p);
-                    if (world.getLevelData() == null) continue;
                     WORLD_PATH_ACCEPTED.add(p);
                     WORLDS.put(p, world);
-                    requireActivity().runOnUiThread(() -> ADAPTER.notifyItemInserted(ADAPTER.getItemCount() - 1));
+                    world.update();
+                    requireActivity().runOnUiThread(() -> {
+                        ADAPTER.notifyItemInserted(ADAPTER.getItemCount() - 1);
+                    });
                 }
             }
         }

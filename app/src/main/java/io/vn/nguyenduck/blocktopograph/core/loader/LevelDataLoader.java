@@ -48,8 +48,6 @@ public class LevelDataLoader implements Loader {
             reader.readInt();// skip size
 
             cachedTag = (CompoundTag<?>) dataStream.readTag();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -64,8 +62,6 @@ public class LevelDataLoader implements Loader {
 
             os.writeInt(byteArrayStream.size());
             os.write(byteArrayStream.toByteArray());
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
     }
 }

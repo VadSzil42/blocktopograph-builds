@@ -34,7 +34,7 @@ public class LEDataOutputStream extends FilterOutputStream implements DataOutput
 
     @Override
     public void writeChar(int v) throws IOException {
-        out.writeChar(Character.reverseBytes((char) v));
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -44,7 +44,7 @@ public class LEDataOutputStream extends FilterOutputStream implements DataOutput
 
     @Override
     public void writeLong(long v) throws IOException {
-        out.writeLong(Long.reverseBytes(Double.doubleToLongBits(v)));
+        out.writeLong(Long.reverseBytes(v));
     }
 
     @Override
@@ -54,7 +54,7 @@ public class LEDataOutputStream extends FilterOutputStream implements DataOutput
 
     @Override
     public void writeDouble(double v) throws IOException {
-        out.writeDouble(v);
+        out.writeLong(Long.reverseBytes(Double.doubleToLongBits(v)));
     }
 
     @Override
@@ -64,12 +64,12 @@ public class LEDataOutputStream extends FilterOutputStream implements DataOutput
 
     @Override
     public void writeChars(@NotNull String s) throws IOException {
-        out.writeShort(s.length());
+        writeShort(s.length());
         out.write(s.getBytes());
     }
 
     @Override
     public void writeUTF(@NotNull String s) throws IOException {
-        out.writeUTF(s);
+        throw new UnsupportedOperationException();
     }
 }

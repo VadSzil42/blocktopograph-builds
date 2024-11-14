@@ -32,7 +32,6 @@ public class WorldPreLoader {
         file = new File(worldPath);
         path = file.getPath();
         levelData = new LevelDataLoader(new File(file, "level.dat"));
-        update();
     }
 
     public void update() {
@@ -77,7 +76,7 @@ public class WorldPreLoader {
         try {
             levelData.load();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            BOGGER.log(Level.SEVERE, "", e);
         }
         return levelData.getLevelData();
     }

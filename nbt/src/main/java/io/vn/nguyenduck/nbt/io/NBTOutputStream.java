@@ -67,7 +67,7 @@ public class NBTOutputStream implements Closeable {
                 out.writeDouble(((DoubleTag) tag).getValue());
                 break;
             case STRING:
-                out.writeUTF(((StringTag) tag).getValue());
+                out.writeChars(((StringTag) tag).getValue());
                 break;
             case LIST: {
                 ListTag<?> list = (ListTag<?>) tag;

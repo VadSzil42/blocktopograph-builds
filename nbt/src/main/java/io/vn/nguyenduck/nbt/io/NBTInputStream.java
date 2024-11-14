@@ -83,8 +83,6 @@ public class NBTInputStream implements Closeable {
                 for (int i = 0; i < length; i++)
                     tagList.add(readTagPayload(childType, "", ++depth));
 
-                childType = TagType.BYTE_ARRAY;
-
                 return new ListTag<>(name, tagList, childType);
             }
             case COMPOUND: {
